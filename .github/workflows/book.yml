@@ -1,11 +1,11 @@
 name: Book CI
 on:
   push:
-  branches: [develop]
-  paths:
-    - services/fitness/**
-  pull_request:
-    branches: [master, develop]
+    branches: [develop]
+    paths:
+      - services/fitness/**
+    pull_request:
+      branches: [master, develop]
     paths:
       - services/fitness/**
   workflow_dispatch:

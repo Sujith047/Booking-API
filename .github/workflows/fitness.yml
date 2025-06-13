@@ -1,7 +1,7 @@
 name: Fitness CI
 on:
   push:
-    branches: [develop]
+    branches: [master, develop]
     paths:
       - services/fitness/**
   pull_request:

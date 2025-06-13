@@ -1,4 +1,4 @@
-name: Book CI
+name: Fitness CI
 on:
   push:
     branches: [develop]

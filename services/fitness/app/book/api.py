@@ -9,13 +9,21 @@ from .dependency import (
     get_current_time
 )
 
+
 router_booking = APIRouter()
 
+
 @router_booking.get(
-    path="/classes", 
+    path="/classes",
+    status_code=status.HTTP_200_OK,
     response_model=List[FitnessClass]
 )
-def get_classes(timezone: str = Query("Asia/Kolkata")):
+def get_classes(timezone: str = Query(
+    default="Asia/Kolkata",
+    title="Timezone",
+    description="Timezone to get fitness classes"
+    )
+):
     """
     Get fitness classes available in the specified timezone
     """
@@ -33,6 +41,7 @@ def book_class(booking_req: BookingRequest):
     """
     classes = get_classes_db()
     fitness_class = next((c for c in classes if c.id == booking_req.class_id), None)
+    
     if not fitness_class:
         raise HTTPException(status_code=404, detail="Class not found")
     if fitness_class.available_slots <= 0:
@@ -51,7 +60,8 @@ def book_class(booking_req: BookingRequest):
 
 
 @router_booking.get(
-    path="/bookings", 
+    path="/bookings",
+    status_code=status.HTTP_200_OK,
     response_model=List[Booking]
 )
 def get_bookings(email: str):

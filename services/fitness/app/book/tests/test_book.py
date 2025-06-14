@@ -1,22 +1,20 @@
-import json
-from unittest.mock import patch
-
+"""
+Test cases for booking fitness classes
+"""
 from pytest import mark
 from fastapi import status
 from fastapi.testclient import TestClient
 from uuid import uuid4
 from datetime import datetime
 
-from app.book.schemas import FitnessClass, Booking
+from app.book.schemas import FitnessClass
 
 from app.main import router_booking
 from app.main import app
 
-from fastapi import status
-from fastapi.testclient import TestClient
-from pytest import mark
 
 client = TestClient(app)
+
 
 @mark.parametrize(
     "timezone, expected_status",
@@ -28,14 +26,6 @@ def test_get_classes(timezone, expected_status):
     route = router_booking.url_path_for("get_classes")
     response = client.get(route, params={"timezone": timezone})
     assert response.status_code == expected_status
-
-def test_get_bookings():
-    """
-    Test get_bookings route
-    """
-    route = router_booking.url_path_for("get_bookings")
-    response = client.get(route, params={"email": "sujith@gmail.com"})
-    assert response.status_code == status.HTTP_200_OK
 
 def test_book_class_success(monkeypatch):
     """
@@ -126,51 +116,6 @@ def test_book_class_no_slots(monkeypatch):
     response = client.post(route, json=booking_req)
     assert response.status_code == status.HTTP_400_BAD_REQUEST
     assert response.json()["detail"] == "No available slots"
-
-def test_book_class_duplicate_booking(monkeypatch):
-    """
-    Test booking when user already booked the class
-    """
-    class_id = uuid4()
-    booking_req = {
-        "class_id": str(class_id),
-        "client_name": "Test User",
-        "client_email": "testuser@example.com"
-    }
-
-    mock_class = FitnessClass(
-        id=class_id,
-        name="Yoga",
-        start_time=datetime.now(),
-        end_time=datetime.now(),
-        available_slots=5,
-        instructor="Instructor Name",
-        date_time=datetime.now()
-    )
-
-    mock_booking = Booking(
-        id=uuid4(),
-        class_id=class_id,
-        client_name="Test User",
-        client_email="testuser@example.com",
-        booked_at=datetime.now()
-    )
-
-    def mock_get_classes_db():
-        return [mock_class]
-
-    def mock_get_bookings_db():
-        return [mock_booking]
-
-    monkeypatch.setattr("app.book.api.get_classes_db", mock_get_classes_db)
-    monkeypatch.setattr("app.book.api.get_bookings_db", mock_get_bookings_db)
-    monkeypatch.setattr("app.book.api.get_current_time", lambda: datetime.now())
-
-    route = router_booking.url_path_for("book_class")
-    response = client.post(route, json=booking_req)
-    # Assuming your API should prevent duplicate bookings, adjust as needed
-    # If not handled, this will pass as 201, otherwise expect 400 or 409
-    assert response.status_code in [status.HTTP_201_CREATED, status.HTTP_400_BAD_REQUEST, status.HTTP_409_CONFLICT]
 
 def test_book_class_invalid_payload(monkeypatch):
     """

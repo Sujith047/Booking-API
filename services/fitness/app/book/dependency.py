@@ -1,4 +1,3 @@
-# utils.py
 from .schemas import FitnessClass
 from uuid import uuid4
 from datetime import datetime, timedelta
@@ -9,16 +8,17 @@ from fastapi import HTTPException
 classes_db = []
 bookings_db = []
 
+
 IST = timezone("Asia/Kolkata")
 
-# Seed classes
+
 def seed_classes():
     classes_db.clear()
     now = datetime.now(IST)
     classes_db.extend([
-        FitnessClass(id=uuid4(), name="Yoga", date_time=now.replace(hour=7, minute=0) + timedelta(days=1), instructor="Alice", available_slots=5),
-        FitnessClass(id=uuid4(), name="Zumba", date_time=now.replace(hour=10, minute=0) + timedelta(days=1), instructor="Bob", available_slots=3),
-        FitnessClass(id=uuid4(), name="HIIT", date_time=now.replace(hour=18, minute=0) + timedelta(days=1), instructor="Charlie", available_slots=4),
+        FitnessClass(id=uuid4(), name="Yoga", date_time=now.replace(hour=7, minute=0) + timedelta(days=1), instructor="Ramesh", available_slots=5),
+        FitnessClass(id=uuid4(), name="Zumba", date_time=now.replace(hour=10, minute=0) + timedelta(days=1), instructor="Suresh", available_slots=3),
+        FitnessClass(id=uuid4(), name="HIIT", date_time=now.replace(hour=18, minute=0) + timedelta(days=1), instructor="Mahesh", available_slots=4),
     ])
 
 def get_classes_with_timezone(tz_name: str):

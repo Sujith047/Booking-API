@@ -47,7 +47,7 @@ pip install -r app/requirements-dev.txt
 pytest -c app/pytest.ini --cov --cov-report term-missing
 ```
 
-### Running the API
+### Running the FastAPI
 
 ```bash
 uvicorn app.main:app --reload

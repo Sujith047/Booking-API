@@ -44,6 +44,7 @@ class BookingRequest(BaseModel):
     )
     client_name: str = Field(
         ...,
+        min_length=1,
         title="Client Name",
         description="Name of the client booking the class"
     )
@@ -52,6 +53,12 @@ class BookingRequest(BaseModel):
         title="Client Email",
         description="Email address of the client booking the class"
     )
+
+    model_config = {
+        class_id: "f2b1c3d4-5678-90ab-cdef-1234567890ab",
+        client_name: "sujith",
+        client_email: "suji@gmail.com"
+    }
 
 class Booking(BaseModel):
     """
